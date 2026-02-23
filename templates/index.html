@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <!-- Add Task Form -->
+    <form action="{{ url_for('add') }}" method="post">
+        <input type="text" name="title" placeholder="Enter a new task..." required>
+        <button type="submit">Add Task</button>
+    </form>
+
+    <!-- Task List -->
+    <ul>
+        {% for task in tasks %}
+        <li class="{% if task.completed %}completed{% endif %}">
+            <span class="task-title">{{ task.title }}</span>
+            <div class="actions">
+                <!-- Toggle completion -->
+                <form action="{{ url_for('toggle', id=task.id) }}" method="post">
+                    <button type="submit" class="toggle">
+                        {% if task.completed %}Undo{% else %}Complete{% endif %}
+                    </button>
+                </form>
+                <!-- Edit button -->
+                <a href="{{ url_for('edit', id=task.id) }}">
+                    <button type="button" class="edit">Edit</button>
+                </a>
+                <!-- Delete button -->
+                <form action="{{ url_for('delete', id=task.id) }}" method="post">
+                    <button type="submit" class="delete" onclick="return confirm('Are you sure?')">Delete</button>
+                </form>
+            </div>
+        </li>
+        {% else %}
+        <li>No tasks yet. Add one above!</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
